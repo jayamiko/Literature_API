@@ -2,6 +2,82 @@ const { literature, user } = require("../../models");
 
 const Joi = require("joi");
 
+exports.getLiterature = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        let data = await literature.findOne({
+            where: {
+                id,
+            },
+            include: {
+                model: user,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt"],
+            },
+        });
+
+        data = JSON.parse(JSON.stringify(data));
+
+        const newData = {
+            ...data,
+            attache: "http://localhost:5000/upload/" + data.attache,
+        };
+
+        res.send({
+            status: "Success",
+            data: newData,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            status: "Failed",
+            message: "Server error",
+        });
+    }
+};
+
+exports.getLiteratures = async (req, res) => {
+    try {
+        let data = await literature.findAll({
+            include: {
+                model: user,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt"],
+            },
+        });
+
+        data = JSON.parse(JSON.stringify(data));
+
+        const newData = data.map((item) => ({
+            ...item,
+            attache: {
+                filename: item.attache,
+                url: "http://localhost:5000/upload/" + item.attache,
+            },
+        }));
+
+        res.send({
+            status: "Success",
+            data: newData,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            status: "Failed",
+            message: "Server error",
+        });
+    }
+};
+
 exports.getSearch = async (req, res) => {
     const titleQuery = req.query.title;
     const { Op } = require("sequelize");
