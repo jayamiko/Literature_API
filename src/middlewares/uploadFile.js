@@ -24,7 +24,7 @@ exports.uploadPDF = (FilePDF, location) => {
         }
     };
 
-    const sizeMB = 10;
+    const sizeMB = 15;
     const maxSize = sizeMB * 1024 * 1024;
 
     const upload = multer({

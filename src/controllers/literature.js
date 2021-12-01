@@ -53,6 +53,7 @@ exports.getLiteratures = async (req, res) => {
             attributes: {
                 exclude: ["createdAt", "updatedAt"],
             },
+            order: [['updatedAt', 'DESC']]
         });
 
         data = JSON.parse(JSON.stringify(data));
@@ -110,6 +111,7 @@ exports.getSearch = async (req, res) => {
             pages: item.pages,
             isbn: item.isbn,
             author: item.author,
+            status: item.status,
             attache: "http://localhost:5000/upload/" + item.attache,
             user: item.user,
         }));
@@ -137,7 +139,6 @@ exports.getLiteraturesProfile = async (req, res) => {
             },
             include: {
                 model: user,
-                as: "user",
                 attributes: {
                     exclude: ["createdAt", "updatedAt"],
                 },
@@ -156,6 +157,7 @@ exports.getLiteraturesProfile = async (req, res) => {
             pages: item.pages,
             isbn: item.isbn,
             author: item.author,
+            status: item.status,
             attache: "http://localhost:5000/upload/" + item.attache,
             user: item.user,
         }));
@@ -180,7 +182,7 @@ exports.addLiterature = async (req, res) => {
         userId: Joi.number().required(),
         publication_date: Joi.date(),
         pages: Joi.number(),
-        isbn: Joi.string().min(5).max(15),
+        isbn: Joi.string().min(9).max(15),
         author: Joi.string().min(4),
     });
 
@@ -226,6 +228,52 @@ exports.addLiterature = async (req, res) => {
         res.send({
             status: "Success",
             message: "Literature has successfully added",
+            data: newData,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            status: "Failed",
+            message: "Server error",
+        });
+    }
+};
+
+exports.updateLiterature = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await literature.update(req.body, {
+            where: {
+                id,
+            },
+        });
+
+        let data = await literature.findOne({
+            where: {
+                id,
+            },
+            include: {
+                model: user,
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "password"],
+                },
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "userId"],
+            },
+        });
+
+        data = JSON.parse(JSON.stringify(data));
+
+        const newData = {
+            ...data,
+            attache: "http://localhost:5000/upload/" + data.attache,
+        };
+
+        res.send({
+            status: "Success",
+            message: "Updated status has succesfully",
             data: newData,
         });
     } catch (error) {

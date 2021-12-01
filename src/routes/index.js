@@ -21,7 +21,8 @@ router.get('/literatures', getLiteratures)
 router.get('/literature/:id', getLiterature)
 router.get("/literature", auth, getSearch);
 router.get("/profile/:id/literatures", getLiteraturesProfile);
-router.post('/literature', auth, uploadPDF("attache"), addLiterature)
+router.post('/literature', auth, uploadPDF("attache"), addterature)
+router.put('/literature/:id', auth, admin, updateLiterature)
 router.delete('/literature/:id', auth, admin, deleteLiterature)
 
 // Route Collections
