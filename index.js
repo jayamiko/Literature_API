@@ -10,12 +10,12 @@ app.use(express.json())
 app.use('/api/v1/', router)
 app.use('/upload', express.static('upload'))
 
-app.get('/', function (req, res) {
-    res.send({
-        message: 'Hello World',
-        CLIENT_URL: process.env.CLIENT_URL,
-    });
-});
+// app.get('/', function (req, res) {
+//     res.send({
+//         message: 'Hello World',
+//         CLIENT_URL: process.env.CLIENT_URL,
+//     });
+// });
 
 app.listen(PORT, () => {
     console.log(('Server Running on Port: ', PORT));
