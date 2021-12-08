@@ -10,7 +10,6 @@
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.3",
     "mysql2": "^2.3.3",
-    "node": "^12.22.3",
     "nodemailer": "^6.7.2",
     "nodemon": "^2.0.15",
     "path": "^0.12.7",
@@ -22,7 +21,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "node index.js",
     "client": "npm start --prefix ../Client",
     "dev": "concurrently \"npm start\" \"npm run client\""
   },
